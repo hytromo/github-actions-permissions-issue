@@ -1,0 +1,53 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        shell: bash
+    container:
+      image: hytromo/sample-gh-actions-image:latest
+      volumes:
+        - /bin:/bin
+        - /data:/data
+        - /etc:/etc
+        - /imagegeneration:/imagegeneration
+        - /lib32:/lib32
+        - /libx32:/libx32
+        - /media:/media
+        - /opt:/opt
+        - /root:/root
+        - /sbin:/sbin
+        - /srv:/srv
+        - /tmp:/tmp
+        - /var:/var
+        - /boot:/boot
+        - /dev:/dev
+        - /lib:/lib
+        - /home:/home
+        - /lib64:/lib64
+        - /mnt:/mnt
+        - /snap:/snap
+        - /sys:/sys
+        - /usr:/usr
+      # pass the user and group that github actions runs as
+      options: --user 1001:123 --privileged
+    name: Build
+
+    steps:
+      - name: Check terraform version
+        run: |
+          # add custom executables that are coming from the container to path
+          echo "/.bin" >> $GITHUB_PATH
+          which terraform
+          terraform --version
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
