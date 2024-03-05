@@ -40,10 +40,14 @@ jobs:
     name: Build
 
     steps:
-      - name: Check terraform version
+      - name: Add custom PATH
         run: |
           # add custom executables that are coming from the container to path
           echo "/.bin" >> $GITHUB_PATH
+
+      - name: Check terraform version
+        run: |
+          ls /.bin
           which terraform
           terraform --version
 
